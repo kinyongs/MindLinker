@@ -4,30 +4,417 @@
   <meta charset="UTF-8" />
   <title>MindLinker</title>
 
-  <!-- Firebase SDK -->
+  <!-- Firebase SDK (compat version) -->
   <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore-compat.js"></script>
+  
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
   <style>
-    body { font-family: sans-serif; padding: 20px; }
-    .card { border: 1px solid #ccc; margin: 10px 0; padding: 10px; border-radius: 8px; }
-    #hint { display: none; font-style: italic; color: gray; }
+    :root {
+      --bg-primary: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      --bg-secondary: rgba(255, 255, 255, 0.95);
+      --text-primary: #2d3748;
+      --text-secondary: #718096;
+      --accent-primary: #667eea;
+      --accent-secondary: #764ba2;
+      --card-bg: rgba(255, 255, 255, 0.25);
+      --card-border: rgba(255, 255, 255, 0.3);
+      --shadow-light: 0 8px 32px rgba(0, 0, 0, 0.1);
+      --shadow-heavy: 0 20px 40px rgba(0, 0, 0, 0.15);
+    }
+
+    [data-theme="dark"] {
+      --bg-primary: linear-gradient(135deg, #1a202c 0%, #2d3748 100%);
+      --bg-secondary: rgba(26, 32, 44, 0.95);
+      --text-primary: #f7fafc;
+      --text-secondary: #a0aec0;
+      --accent-primary: #90cdf4;
+      --accent-secondary: #9f7aea;
+      --card-bg: rgba(45, 55, 72, 0.4);
+      --card-border: rgba(255, 255, 255, 0.1);
+      --shadow-light: 0 8px 32px rgba(0, 0, 0, 0.3);
+      --shadow-heavy: 0 20px 40px rgba(0, 0, 0, 0.4);
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      transition: all 0.3s ease;
+    }
+
+    .container {
+      max-width: 900px;
+      width: 100%;
+      background: var(--card-bg);
+      backdrop-filter: blur(20px);
+      border: 1px solid var(--card-border);
+      border-radius: 24px;
+      padding: 40px;
+      box-shadow: var(--shadow-heavy);
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+      animation: slideUp 0.8s ease-out;
+    }
+
+    .container::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--accent-primary), transparent);
+      animation: shimmer 3s infinite;
+    }
+
+    @keyframes slideUp {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes shimmer {
+      0%, 100% { opacity: 0; }
+      50% { opacity: 1; }
+    }
+
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.05); }
+    }
+
+    .header {
+      margin-bottom: 40px;
+      position: relative;
+    }
+
+    .theme-toggle {
+      position: absolute;
+      top: -10px;
+      right: -10px;
+      background: var(--card-bg);
+      backdrop-filter: blur(10px);
+      border: 1px solid var(--card-border);
+      border-radius: 50%;
+      width: 50px;
+      height: 50px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.4em;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      color: var(--text-primary);
+    }
+
+    .theme-toggle:hover {
+      transform: scale(1.1) rotate(10deg);
+      box-shadow: var(--shadow-light);
+    }
+
+    h1 {
+      font-size: 3rem;
+      font-weight: 700;
+      background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 10px;
+      letter-spacing: -0.02em;
+    }
+
+    .subtitle {
+      font-size: 1.1rem;
+      color: var(--text-secondary);
+      font-weight: 400;
+      line-height: 1.6;
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    .word-section {
+      background: var(--bg-secondary);
+      backdrop-filter: blur(10px);
+      border-radius: 20px;
+      padding: 30px;
+      margin: 30px 0;
+      border: 1px solid var(--card-border);
+      box-shadow: var(--shadow-light);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .word-section::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: conic-gradient(from 0deg, transparent, var(--accent-primary), transparent);
+      animation: rotate 6s linear infinite;
+      opacity: 0.1;
+    }
+
+    @keyframes rotate {
+      to { transform: rotate(360deg); }
+    }
+
+    #dateTime {
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+      margin-bottom: 15px;
+      font-weight: 500;
+    }
+
+    #wordPair {
+      font-size: 1.8rem;
+      font-weight: 600;
+      margin-bottom: 20px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .action-button {
+      background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+      color: white;
+      border: none;
+      padding: 12px 24px;
+      border-radius: 25px;
+      cursor: pointer;
+      font-size: 1rem;
+      font-weight: 500;
+      margin: 8px;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .action-button::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+      transition: left 0.5s;
+    }
+
+    .action-button:hover::before {
+      left: 100%;
+    }
+
+    .action-button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+    }
+
+    .action-button:active {
+      transform: translateY(0);
+    }
+
+    #hint {
+      display: none;
+      background: var(--card-bg);
+      backdrop-filter: blur(10px);
+      border: 1px solid var(--card-border);
+      border-radius: 15px;
+      padding: 20px;
+      margin-top: 15px;
+      font-style: italic;
+      color: var(--text-secondary);
+      font-size: 1rem;
+      line-height: 1.5;
+      animation: fadeIn 0.5s ease-out;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(-10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .input-section {
+      margin: 40px 0;
+    }
+
+    textarea {
+      width: 100%;
+      padding: 20px;
+      font-size: 1rem;
+      border: 2px solid var(--card-border);
+      border-radius: 16px;
+      resize: vertical;
+      background: var(--bg-secondary);
+      backdrop-filter: blur(10px);
+      color: var(--text-primary);
+      font-family: inherit;
+      transition: all 0.3s ease;
+      box-shadow: var(--shadow-light);
+      min-height: 120px;
+    }
+
+    textarea:focus {
+      outline: none;
+      border-color: var(--accent-primary);
+      box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+      transform: translateY(-2px);
+    }
+
+    textarea::placeholder {
+      color: var(--text-secondary);
+      opacity: 0.7;
+    }
+
+    .section-title {
+      font-size: 1.5rem;
+      font-weight: 600;
+      margin: 40px 0 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+    }
+
+    .answers-grid {
+      display: grid;
+      gap: 20px;
+      margin-top: 20px;
+    }
+
+    .answer-card {
+      background: var(--bg-secondary);
+      backdrop-filter: blur(10px);
+      border: 1px solid var(--card-border);
+      border-radius: 16px;
+      padding: 24px;
+      text-align: left;
+      box-shadow: var(--shadow-light);
+      transition: all 0.3s ease;
+      position: relative;
+      animation: slideIn 0.6s ease-out;
+    }
+
+    @keyframes slideIn {
+      from {
+        opacity: 0;
+        transform: translateX(-20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateX(0);
+      }
+    }
+
+    .answer-card:hover {
+      transform: translateY(-4px);
+      box-shadow: var(--shadow-heavy);
+    }
+
+    .answer-word-pair {
+      font-weight: 600;
+      color: var(--accent-primary);
+      margin-bottom: 12px;
+      font-size: 1rem;
+    }
+
+    .answer-text {
+      line-height: 1.6;
+      margin-bottom: 12px;
+      font-size: 1rem;
+    }
+
+    .answer-timestamp {
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+      opacity: 0.8;
+    }
+
+    .loading {
+      display: inline-block;
+      width: 20px;
+      height: 20px;
+      border: 3px solid var(--card-border);
+      border-radius: 50%;
+      border-top-color: var(--accent-primary);
+      animation: spin 1s ease-in-out infinite;
+      margin-right: 10px;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    .pulse {
+      animation: pulse 2s infinite;
+    }
+
+    @media (max-width: 768px) {
+      .container {
+        padding: 30px 20px;
+        margin: 10px;
+      }
+
+      h1 {
+        font-size: 2.5rem;
+      }
+
+      #wordPair {
+        font-size: 1.5rem;
+      }
+
+      .subtitle {
+        font-size: 1rem;
+      }
+    }
   </style>
 </head>
-<body>
-  <h1>🧠 MindLinker</h1>
-  <p id="wordPair">단어쌍 불러오는 중...</p>
-  <button onclick="toggleHint()">🔍 힌트 보기</button>
-  <p id="hint"></p>
+<body data-theme="light">
+  <div class="container">
+    <div class="header">
+      <button class="theme-toggle" onclick="toggleTheme()">🌙</button>
+      <h1>🧠 MindLinker</h1>
+      <p class="subtitle">매일 새로운 단어쌍을 통해 창의적인 연결을 생각해보고, 다른 사람들의 아이디어도 함께 나눌 수 있는 공간입니다.</p>
+    </div>
+    
+    <div class="word-section">
+      <div id="dateTime"></div>
+      <p id="wordPair">단어쌍 불러오는 중...</p>
+      <button class="action-button" onclick="toggleHint()">🔍 힌트 보기</button>
+      <div id="hint"></div>
+    </div>
 
-  <textarea id="userAnswer" rows="5" cols="50" placeholder="당신의 생각을 적어보세요"></textarea><br>
-  <button onclick="submitAnswer()">제출하기</button>
+    <div class="input-section">
+      <textarea id="userAnswer" rows="5" placeholder="당신의 창의적인 생각을 자유롭게 적어보세요..."></textarea><br>
+      <button class="action-button" onclick="submitAnswer()">✨ 제출하기</button>
+    </div>
 
-  <h2>💬 다른 사람들의 생각</h2>
-  <div id="answerList"></div>
+    <h2 class="section-title">💬 다른 사람들의 생각</h2>
+    <div id="answerList" class="answers-grid"></div>
+  </div>
 
   <script>
-    // ✅ Firebase 구성 정보
     const firebaseConfig = {
       apiKey: "AIzaSyDoWfAhh1VmfYnokSZs9enq8s1liRL5t0",
       authDomain: "kmindlinker.firebaseapp.com",
@@ -38,13 +425,30 @@
       measurementId: "G-Q3N5L45VD3"
     };
 
-    const app = firebase.initializeApp(firebaseConfig);
+    firebase.initializeApp(firebaseConfig);
     const db = firebase.firestore();
 
     let currentWordPair = "";
     let currentHint = "";
 
-    // 📅 오늘의 단어쌍 불러오기
+    function updateDateTime() {
+      const now = new Date();
+      const options = { 
+        year: 'numeric', 
+        month: 'long', 
+        day: 'numeric', 
+        weekday: 'long',
+        hour: '2-digit',
+        minute: '2-digit'
+      };
+      document.getElementById("dateTime").textContent = now.toLocaleDateString('ko-KR', options);
+    }
+
+    function showLoading(elementId) {
+      const element = document.getElementById(elementId);
+      element.innerHTML = '<span class="loading"></span>불러오는 중...';
+    }
+
     fetch('./data/Daily_data.json')
       .then(res => res.json())
       .then(data => {
@@ -54,25 +458,42 @@
           currentWordPair = `${entry["Concept A"]} vs ${entry["Concept B"]}`;
           currentHint = entry["Hint/Description"];
           document.getElementById('wordPair').innerHTML = `<strong>${currentWordPair}</strong>`;
+          document.getElementById('wordPair').classList.add('pulse');
+          setTimeout(() => {
+            document.getElementById('wordPair').classList.remove('pulse');
+          }, 2000);
         } else {
-          document.getElementById('wordPair').textContent = "❌ 오늘의 단어쌍이 없습니다.";
+          document.getElementById('wordPair').innerHTML = "❌ 오늘의 단어쌍이 없습니다.";
         }
+      })
+      .catch(err => {
+        console.error('Error loading daily data:', err);
+        document.getElementById('wordPair').innerHTML = "⚠️ 데이터를 불러올 수 없습니다.";
       });
 
     function toggleHint() {
       const hintEl = document.getElementById('hint');
-      if (hintEl.style.display === 'none') {
-        hintEl.style.display = 'block';
-        hintEl.textContent = currentHint;
-      } else {
+      const isVisible = hintEl.style.display !== 'none';
+      
+      if (isVisible) {
         hintEl.style.display = 'none';
+      } else {
+        hintEl.style.display = 'block';
+        hintEl.textContent = currentHint || "힌트가 없습니다.";
       }
     }
 
-    // 📝 답변 제출
     function submitAnswer() {
       const text = document.getElementById('userAnswer').value.trim();
-      if (!text) return alert("답변을 입력해주세요.");
+      if (!text) {
+        showNotification("답변을 입력해주세요.", "warning");
+        return;
+      }
+
+      const submitButton = event.target;
+      const originalText = submitButton.textContent;
+      submitButton.textContent = '제출 중...';
+      submitButton.disabled = true;
 
       db.collection("answers").add({
         text,
@@ -80,30 +501,117 @@
         timestamp: new Date().toISOString()
       }).then(() => {
         document.getElementById('userAnswer').value = '';
+        showNotification("답변이 성공적으로 제출되었습니다!", "success");
         loadAnswers();
+      }).catch(err => {
+        console.error('Error submitting answer:', err);
+        showNotification("제출 중 오류가 발생했습니다.", "error");
+      }).finally(() => {
+        submitButton.textContent = originalText;
+        submitButton.disabled = false;
       });
     }
 
-    // 📥 답변 불러오기
+    function showNotification(message, type = 'info') {
+      // Create notification element
+      const notification = document.createElement('div');
+      notification.style.cssText = `
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        padding: 15px 20px;
+        border-radius: 10px;
+        color: white;
+        font-weight: 500;
+        z-index: 1000;
+        animation: slideInRight 0.3s ease-out;
+        background: ${type === 'success' ? 'linear-gradient(135deg, #48bb78, #38a169)' : 
+                     type === 'error' ? 'linear-gradient(135deg, #f56565, #e53e3e)' : 
+                     'linear-gradient(135deg, #667eea, #764ba2)'};
+        box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+      `;
+      notification.textContent = message;
+      document.body.appendChild(notification);
+
+      setTimeout(() => {
+        notification.remove();
+      }, 3000);
+    }
+
     function loadAnswers() {
       const container = document.getElementById('answerList');
-      container.innerHTML = '';
+      showLoading('answerList');
+      
       db.collection("answers")
         .orderBy("timestamp", "desc")
+        .limit(20)
         .get()
         .then(snapshot => {
-          snapshot.forEach(doc => {
+          container.innerHTML = '';
+          snapshot.forEach((doc, index) => {
             const data = doc.data();
             const div = document.createElement('div');
-            div.className = 'card';
-            div.innerHTML = `<strong>${data.wordPair}</strong><br>${data.text}<br><small>${data.timestamp}</small>`;
+            div.className = 'answer-card';
+            div.style.animationDelay = `${index * 0.1}s`;
+            
+            const timestamp = new Date(data.timestamp).toLocaleString('ko-KR', {
+              month: 'short',
+              day: 'numeric',
+              hour: '2-digit',
+              minute: '2-digit'
+            });
+
+            div.innerHTML = `
+              <div class="answer-word-pair">${data.wordPair}</div>
+              <div class="answer-text">${data.text}</div>
+              <div class="answer-timestamp">${timestamp}</div>
+            `;
             container.appendChild(div);
           });
+        })
+        .catch(err => {
+          console.error('Error loading answers:', err);
+          container.innerHTML = '<p style="color: var(--text-secondary); text-align: center;">답변을 불러올 수 없습니다.</p>';
         });
     }
 
-    // 첫 로딩 시 자동 호출
-    window.onload = loadAnswers;
+    window.onload = () => {
+      updateDateTime();
+      loadAnswers();
+      setInterval(updateDateTime, 60000);
+    };
+
+    function applyTheme(theme) {
+      document.body.setAttribute('data-theme', theme);
+      localStorage.setItem('theme', theme);
+      document.querySelector('.theme-toggle').textContent = theme === 'dark' ? '🌞' : '🌙';
+    }
+
+    function toggleTheme() {
+      const current = document.body.getAttribute('data-theme');
+      applyTheme(current === 'dark' ? 'light' : 'dark');
+    }
+
+    (function initializeTheme() {
+      const savedTheme = localStorage.getItem('theme');
+      if (savedTheme) {
+        applyTheme(savedTheme);
+      } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        applyTheme('dark');
+      } else {
+        applyTheme('light');
+      }
+    })();
+
+    // Add some interactive features
+    document.addEventListener('DOMContentLoaded', function() {
+      // Add Enter key support for textarea
+      document.getElementById('userAnswer').addEventListener('keydown', function(e) {
+        if (e.key === 'Enter' && (e.ctrlKey || e.metaKey)) {
+          submitAnswer();
+        }
+      });
+    });
   </script>
 </body>
 </html>
