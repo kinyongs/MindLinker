@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <title>MindLinker</title>
+
+  <!-- Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js"></script>
+
+  <style>
+    body { font-family: sans-serif; padding: 20px; }
+    .card { border: 1px solid #ccc; margin: 10px 0; padding: 10px; border-radius: 8px; }
+    #hint { display: none; font-style: italic; color: gray; }
+  </style>
+</head>
+<body>
+  <h1>🧠 MindLinker</h1>
+  <p id="wordPair">단어쌍 불러오는 중...</p>
+  <button onclick="toggleHint()">🔍 힌트 보기</button>
+  <p id="hint"></p>
+
+  <textarea id="userAnswer" rows="5" cols="50" placeholder="당신의 생각을 적어보세요"></textarea><br>
+  <button onclick="submitAnswer()">제출하기</button>
+
+  <h2>💬 다른 사람들의 생각</h2>
+  <div id="answerList"></div>
+
+  <script>
+    // ✅ Firebase 구성 정보
+    const firebaseConfig = {
+      apiKey: "AIzaSyDoWfAhh1VmfYnokSZs9enq8s1liRL5t0",
+      authDomain: "kmindlinker.firebaseapp.com",
+      projectId: "kmindlinker",
+      storageBucket: "kmindlinker.appspot.com",
+      messagingSenderId: "544037002770",
+      appId: "1:544037002770:web:a374f6c4a94bece58b82cb",
+      measurementId: "G-Q3N5L45VD3"
+    };
+
+    const app = firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
+
+    let currentWordPair = "";
+    let currentHint = "";
+
+    // 📅 오늘의 단어쌍 불러오기
+    fetch('./data/Daily_data.json')
+      .then(res => res.json())
+      .then(data => {
+        const today = new Date().toISOString().slice(0, 10);
+        const entry = data.find(d => d.Date === today);
+        if (entry) {
+          currentWordPair = `${entry["Concept A"]} vs ${entry["Concept B"]}`;
+          currentHint = entry["Hint/Description"];
+          document.getElementById('wordPair').innerHTML = `<strong>${currentWordPair}</strong>`;
+        } else {
+          document.getElementById('wordPair').textContent = "❌ 오늘의 단어쌍이 없습니다.";
+        }
+      });
+
+    function toggleHint() {
+      const hintEl = document.getElementById('hint');
+      if (hintEl.style.display === 'none') {
+        hintEl.style.display = 'block';
+        hintEl.textContent = currentHint;
+      } else {
+        hintEl.style.display = 'none';
+      }
+    }
+
+    // 📝 답변 제출
+    function submitAnswer() {
+      const text = document.getElementById('userAnswer').value.trim();
+      if (!text) return alert("답변을 입력해주세요.");
+
+      db.collection("answers").add({
+        text,
+        wordPair: currentWordPair,
+        timestamp: new Date().toISOString()
+      }).then(() => {
+        document.getElementById('userAnswer').value = '';
+        loadAnswers();
+      });
+    }
+
+    // 📥 답변 불러오기
+    function loadAnswers() {
+      const container = document.getElementById('answerList');
+      container.innerHTML = '';
+      db.collection("answers")
+        .orderBy("timestamp", "desc")
+        .get()
+        .then(snapshot => {
+          snapshot.forEach(doc => {
+            const data = doc.data();
+            const div = document.createElement('div');
+            div.className = 'card';
+            div.innerHTML = `<strong>${data.wordPair}</strong><br>${data.text}<br><small>${data.timestamp}</small>`;
+            container.appendChild(div);
+          });
+        });
+    }
+
+    // 첫 로딩 시 자동 호출
+    window.onload = loadAnswers;
+  </script>
+</body>
+</html>
