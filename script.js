@@ -44,7 +44,10 @@
       
       // 다른 사람들의 생각 탭을 선택했을 때 답변 로드
       if (tabName === 'others') {
-        loadAnswers();
+        document.getElementById("answerList").innerHTML = "";
+        lastVisible = null;
+        loadAnswers(true); // 초기 로딩
+
       }
     }
 
@@ -141,45 +144,59 @@
     }
 
     function loadAnswers() {
-      const container = document.getElementById('answerList');
-      showLoading('answerList');
-      
-      db.collection("answers")
-        .orderBy("timestamp", "desc")
-        .limit(20)
-        .get()
-        .then(snapshot => {
-          container.innerHTML = '';
+      let lastVisible = null;
+
+      function loadAnswers(initial = true) {
+        const answerList = document.getElementById("answerList");
+        const loadMoreBtn = document.getElementById("loadMoreBtn");
+
+        let query = db.collection("answers")
+                      .orderBy("timestamp", "desc")
+                      .limit(20);
+
+        if (!initial && lastVisible) {
+          query = query.startAfter(lastVisible);
+        }
+
+        query.get().then(snapshot => {
           if (snapshot.empty) {
-            container.innerHTML = '<p style="color: var(--text-secondary); text-align: center; padding: 40px;">아직 제출된 답변이 없습니다.</p>';
+            loadMoreBtn.style.display = "none"; // 더 이상 데이터 없음
             return;
           }
-          
-          snapshot.forEach((doc, index) => {
-            const data = doc.data();
-            const div = document.createElement('div');
-            div.className = 'answer-card';
-            div.style.animationDelay = `${index * 0.1}s`;
-            
-            const timestamp = new Date(data.timestamp).toLocaleString('ko-KR', {
-              month: 'short',
-              day: 'numeric',
-              hour: '2-digit',
-              minute: '2-digit'
-            });
 
-            div.innerHTML = `
-              <div class="answer-word-pair">${data.wordPair}</div>
-              <div class="answer-text">${data.text}</div>
-              <div class="answer-timestamp">${timestamp}</div>
-            `;
-            container.appendChild(div);
+          snapshot.forEach(doc => {
+            const data = doc.data();
+            const card = document.createElement("div");
+            card.className = "answer-card";
+
+            const wordPair = document.createElement("div");
+            wordPair.className = "answer-word-pair";
+            wordPair.textContent = data.wordPair;
+
+            const text = document.createElement("div");
+            text.className = "answer-text";
+            text.textContent = data.text;
+
+            const timestamp = document.createElement("div");
+            timestamp.className = "answer-timestamp";
+            timestamp.textContent = formatTimestamp(data.timestamp);
+
+            card.appendChild(wordPair);
+            card.appendChild(text);
+            card.appendChild(timestamp);
+            answerList.appendChild(card);
           });
-        })
-        .catch(err => {
-          console.error('Error loading answers:', err);
-          container.innerHTML = '<p style="color: var(--text-secondary); text-align: center;">답변을 불러올 수 없습니다.</p>';
+
+          lastVisible = snapshot.docs[snapshot.docs.length - 1];
+
+          if (snapshot.size < 20) {
+            loadMoreBtn.style.display = "none";
+          } else {
+            loadMoreBtn.style.display = "block";
+          }
         });
+      }
+
     }
 
     window.onload = () => {
