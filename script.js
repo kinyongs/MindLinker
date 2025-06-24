@@ -143,8 +143,7 @@
       }, 3000);
     }
 
-    function loadAnswers() {
-      let lastVisible = null;
+let lastVisible = null;
 
       function loadAnswers(initial = true) {
         const answerList = document.getElementById("answerList");
@@ -196,8 +195,6 @@
           }
         });
       }
-
-    }
 
     window.onload = () => {
       updateDateTime();
