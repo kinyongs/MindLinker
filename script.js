@@ -140,21 +140,58 @@
       }, 3000);
     }
 
-    function loadAnswers() {
-      const container = document.getElementById('answerList');
-      showLoading('answerList');
+    let lastDoc = null; // 마지막으로 로드된 문서
+    let isLoading = false; // 로딩 상태 관리
+    let hasMore = true; // 더 불러올 데이터가 있는지 확인
+    const ANSWERS_PER_PAGE = 5; // 한 번에 로드할 답변 수
+
+    // 1. 페이지네이션 방식 - 무한 스크롤
+    function loadAnswers(isInitial = true) {
+      if (isLoading || (!hasMore && !isInitial)) return;
       
-      db.collection("answers")
+      const container = document.getElementById('answerList');
+      
+      if (isInitial) {
+        showLoading('answerList');
+        lastDoc = null;
+        hasMore = true;
+      } else {
+        // 더 불러오기 버튼 또는 로딩 표시
+        showLoadMoreSpinner();
+      }
+      
+      isLoading = true;
+      
+      let query = db.collection("answers")
         .orderBy("timestamp", "desc")
-        .limit(20)
-        .get()
+        .limit(ANSWERS_PER_PAGE);
+        
+      if (lastDoc) {
+        query = query.startAfter(lastDoc);
+      }
+      
+      query.get()
         .then(snapshot => {
-          container.innerHTML = '';
+          if (isInitial) {
+            container.innerHTML = '';
+          }
+          
           if (snapshot.empty) {
-            container.innerHTML = '<p style="color: var(--text-secondary); text-align: center; padding: 40px;">아직 제출된 답변이 없습니다.</p>';
+            if (isInitial) {
+              container.innerHTML = '<p style="color: var(--text-secondary); text-align: center; padding: 40px;">아직 제출된 답변이 없습니다.</p>';
+            } else {
+              showNotification("더 이상 불러올 답변이 없습니다.", "info");
+            }
+            hasMore = false;
+            removeLoadMoreButton();
+            removeLoadMoreSpinner();
             return;
           }
           
+          // 마지막 문서 저장
+          lastDoc = snapshot.docs[snapshot.docs.length - 1];
+          
+          // 답변 카드 생성
           snapshot.forEach((doc, index) => {
             const data = doc.data();
             const div = document.createElement('div');
@@ -175,12 +212,69 @@
             `;
             container.appendChild(div);
           });
+          
+          // 더 불러올 데이터가 있으면 "더 보기" 버튼 추가
+          if (snapshot.docs.length === ANSWERS_PER_PAGE) {
+            addLoadMoreButton();
+          } else {
+            hasMore = false;
+            removeLoadMoreButton();
+          }
+          
+          removeLoadMoreSpinner();
         })
         .catch(err => {
           console.error('Error loading answers:', err);
-          container.innerHTML = '<p style="color: var(--text-secondary); text-align: center;">답변을 불러올 수 없습니다.</p>';
+          if (isInitial) {
+            container.innerHTML = '<p style="color: var(--text-secondary); text-align: center;">답변을 불러올 수 없습니다.</p>';
+          }
+          removeLoadMoreSpinner();
+        })
+        .finally(() => {
+          isLoading = false;
         });
     }
+
+    function addLoadMoreButton() {
+      const container = document.getElementById('answerList');
+      let button = document.getElementById('loadMoreBtn');
+
+      if (!button) {
+        button = document.createElement('button');
+        button.id = 'loadMoreBtn';
+        button.className = 'action-button';
+        button.style.cssText = 'margin: 20px auto; display: block; max-width: 200px;';
+        button.textContent = '더 보기';
+        button.onclick = () => loadAnswers(false);
+      }
+
+      container.appendChild(button); // 항상 맨 아래로 이동
+    }
+
+
+    function removeLoadMoreButton() {
+      const button = document.getElementById('loadMoreBtn');
+      if (button) button.remove();
+    }
+
+    function showLoadMoreSpinner() {
+      const container = document.getElementById('answerList');
+      const existing = document.getElementById('loadMoreSpinner');
+      if (existing) return;
+      
+      const spinner = document.createElement('div');
+      spinner.id = 'loadMoreSpinner';
+      spinner.style.cssText = 'text-align: center; padding: 20px; color: var(--text-secondary);';
+      spinner.innerHTML = '<span class="loading"></span>더 불러오는 중...';
+      
+      container.appendChild(spinner);
+    }
+
+    function removeLoadMoreSpinner() {
+      const spinner = document.getElementById('loadMoreSpinner');
+      if (spinner) spinner.remove();
+    }
+
 
     window.onload = () => {
       updateDateTime();
