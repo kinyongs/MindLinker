@@ -1,3 +1,16 @@
+    const firebaseConfig = {
+      apiKey: "AIzaSyDoWfAhh1VmfYnokSZs9enq8s1liRL5t0",
+      authDomain: "kmindlinker.firebaseapp.com",
+      projectId: "kmindlinker",
+      storageBucket: "kmindlinker.appspot.com",
+      messagingSenderId: "544037002770",
+      appId: "1:544037002770:web:a374f6c4a94bece58b82cb",
+      measurementId: "G-Q3N5L45VD3"
+    };
+
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
+
     let currentWordPair = "";
     let currentHint = "";
 
@@ -81,28 +94,23 @@
       submitButton.textContent = '제출 중...';
       submitButton.disabled = true;
 
-      fetch('/api/submit', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ text, wordPair: currentWordPair })
-      }).then(res => res.json())
-        .then(data => {
-          if (data.success) {
-            document.getElementById('userAnswer').value = '';
-            showNotification("답변이 성공적으로 제출되었습니다!", "success");
-            switchTab('others');
-          } else {
-            showNotification("제출 중 오류가 발생했습니다.", "error");
-          }
-        }).catch(err => {
-          console.error('Error submitting answer:', err);
-          showNotification("제출 실패", "error");
-        }).finally(() => {
-          submitButton.textContent = originalText;
-          submitButton.disabled = false;
-        });
+      db.collection("answers").add({
+        text,
+        wordPair: currentWordPair,
+        timestamp: new Date().toISOString()
+      }).then(() => {
+        document.getElementById('userAnswer').value = '';
+        showNotification("답변이 성공적으로 제출되었습니다!", "success");
+        // 제출 후 자동으로 다른 사람들의 생각 탭으로 전환
+        switchTab('others');
+      }).catch(err => {
+        console.error('Error submitting answer:', err);
+        showNotification("제출 중 오류가 발생했습니다.", "error");
+      }).finally(() => {
+        submitButton.textContent = originalText;
+        submitButton.disabled = false;
+      });
     }
-
 
     function showNotification(message, type = 'info') {
       const notification = document.createElement('div');
@@ -132,54 +140,65 @@
       }, 3000);
     }
 
-    let lastTimestamp = null;
-    let isLoading = false;
-    let hasMore = true;
-    const ANSWERS_PER_PAGE = 5;
+    let lastDoc = null; // 마지막으로 로드된 문서
+    let isLoading = false; // 로딩 상태 관리
+    let hasMore = true; // 더 불러올 데이터가 있는지 확인
+    const ANSWERS_PER_PAGE = 5; // 한 번에 로드할 답변 수
 
+    // 1. 페이지네이션 방식 - 무한 스크롤
     function loadAnswers(isInitial = true) {
       if (isLoading || (!hasMore && !isInitial)) return;
-
+      
       const container = document.getElementById('answerList');
-
+      
       if (isInitial) {
         showLoading('answerList');
-        lastTimestamp = null;
+        lastDoc = null;
         hasMore = true;
       } else {
+        // 더 불러오기 버튼 또는 로딩 표시
         showLoadMoreSpinner();
       }
-
+      
       isLoading = true;
-
-      const url = new URL('/api/loadAnswers', window.location.origin);
-      if (lastTimestamp) {
-        url.searchParams.append('after', lastTimestamp);
+      
+      let query = db.collection("answers")
+        .orderBy("timestamp", "desc")
+        .limit(ANSWERS_PER_PAGE);
+        
+      if (lastDoc) {
+        query = query.startAfter(lastDoc);
       }
-
-      fetch(url)
-        .then(res => res.json())
-        .then(data => {
-          if (isInitial) container.innerHTML = '';
-
-          if (!data.answers || data.answers.length === 0) {
-            hasMore = false;
+      
+      query.get()
+        .then(snapshot => {
+          if (isInitial) {
+            container.innerHTML = '';
+          }
+          
+          if (snapshot.empty) {
             if (isInitial) {
-              container.innerHTML = '<p style="text-align: center;">아직 제출된 답변이 없습니다.</p>';
+              container.innerHTML = '<p style="color: var(--text-secondary); text-align: center; padding: 40px;">아직 제출된 답변이 없습니다.</p>';
             } else {
               showNotification("더 이상 불러올 답변이 없습니다.", "info");
             }
+            hasMore = false;
             removeLoadMoreButton();
             removeLoadMoreSpinner();
             return;
           }
-
-          data.answers.forEach((answer, index) => {
+          
+          // 마지막 문서 저장
+          lastDoc = snapshot.docs[snapshot.docs.length - 1];
+          
+          // 답변 카드 생성
+          snapshot.forEach((doc, index) => {
+            const data = doc.data();
             const div = document.createElement('div');
             div.className = 'answer-card';
             div.style.animationDelay = `${index * 0.1}s`;
-
-            const timestamp = new Date(answer.timestamp).toLocaleString('ko-KR', {
+            
+            const timestamp = new Date(data.timestamp).toLocaleString('ko-KR', {
               month: 'short',
               day: 'numeric',
               hour: '2-digit',
@@ -187,28 +206,27 @@
             });
 
             div.innerHTML = `
-              <div class="answer-word-pair">${answer.wordPair}</div>
-              <div class="answer-text">${answer.text}</div>
+              <div class="answer-word-pair">${data.wordPair}</div>
+              <div class="answer-text">${data.text}</div>
               <div class="answer-timestamp">${timestamp}</div>
             `;
             container.appendChild(div);
           });
-
-          // 업데이트
-          lastTimestamp = data.lastTimestamp;
-          if (data.answers.length < ANSWERS_PER_PAGE) {
+          
+          // 더 불러올 데이터가 있으면 "더 보기" 버튼 추가
+          if (snapshot.docs.length === ANSWERS_PER_PAGE) {
+            addLoadMoreButton();
+          } else {
             hasMore = false;
             removeLoadMoreButton();
-          } else {
-            addLoadMoreButton();
           }
-
+          
           removeLoadMoreSpinner();
         })
         .catch(err => {
           console.error('Error loading answers:', err);
           if (isInitial) {
-            container.innerHTML = '<p>답변을 불러올 수 없습니다.</p>';
+            container.innerHTML = '<p style="color: var(--text-secondary); text-align: center;">답변을 불러올 수 없습니다.</p>';
           }
           removeLoadMoreSpinner();
         })
@@ -216,7 +234,6 @@
           isLoading = false;
         });
     }
-
 
     function addLoadMoreButton() {
       const container = document.getElementById('answerList');
