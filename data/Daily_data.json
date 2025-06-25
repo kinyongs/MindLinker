@@ -31,152 +31,218 @@
   },
   {
     "Date": "2025-06-26",
-    "Concept A": "춤",
-    "Concept B": "수학 공식",
-    "Hint/Description": "반복과 대칭, 패턴을 통해 리듬과 수학은 어떻게 만날까?"
+    "Concept A": "연",
+    "Concept B": "감정 폭발",
+    "Hint/Description": "연이 바람에 흔들리며 균형을 찾듯, 감정 폭발 후에도 안정을 되찾는 과정이 있다."
   },
   {
     "Date": "2025-06-27",
-    "Concept A": "빅데이터",
-    "Concept B": "고전 문학",
-    "Hint/Description": "셰익스피어 작품을 데이터 분석하면 어떤 통찰이 나올까?"
+    "Concept A": "진자 운동",
+    "Concept B": "정체성",
+    "Hint/Description": "진자 운동이 외부 자극에 반응하듯, 정체성도 환경에 따라 변할 수 있다."
   },
   {
     "Date": "2025-06-28",
-    "Concept A": "화산 폭발",
-    "Concept B": "감정 폭발",
-    "Hint/Description": "내면 감정이 터지는 순간과 자연재해의 유사점은?"
+    "Concept A": "코끼리",
+    "Concept B": "자기 인식",
+    "Hint/Description": "코끼리는 거울 속 자신을 인식할 수 있는 몇 안 되는 동물이다. 자기 인식의 진화적 의미는?"
   },
   {
     "Date": "2025-06-29",
-    "Concept A": "시계 톱니바퀴",
-    "Concept B": "합창단",
-    "Hint/Description": "각각의 톱니바퀴와 합창단 개개인은 전체를 어떻게 조화롭게 만드는가?"
+    "Concept A": "무지개",
+    "Concept B": "고립감",
+    "Hint/Description": "무지개는 비와 햇살이 만나야 나타난다. 고립감도 다른 감정과 만날 때 새로운 의미가 될까?"
   },
   {
     "Date": "2025-06-30",
-    "Concept A": "코딩",
-    "Concept B": "요리법",
-    "Hint/Description": "알고리즘과 레시피는 어떻게 순서와 로직을 공유하는가?"
+    "Concept A": "나침반",
+    "Concept B": "결정 장애",
+    "Hint/Description": "나침반이 자북과 진북 사이에서 흔들리듯, 결정 장애도 여러 선택지 사이의 망설임이다."
   },
   {
     "Date": "2025-07-01",
-    "Concept A": "바둑",
-    "Concept B": "생태계",
-    "Hint/Description": "바둑의 수 싸움과 생태계 내 종 간 경쟁은 어떻게 닮았을까?"
+    "Concept A": "기차",
+    "Concept B": "상황 판단",
+    "Hint/Description": "기차는 정해진 레일을 따라가지만, 분기점에서는 선택이 필요하다. 상황 판단도 마찬가지?"
   },
   {
     "Date": "2025-07-02",
-    "Concept A": "우주 탐사",
-    "Concept B": "명상",
-    "Hint/Description": "우주 공간의 고요함과 명상의 내면적 고요함 사이에 공통점이 있을까?"
+    "Concept A": "퍼즐 조각",
+    "Concept B": "시간 관리",
+    "Hint/Description": "퍼즐 조각들이 제자리를 찾아 완성되듯, 시간 관리도 각 활동을 적절한 자리에 배치하는 것이다."
   },
   {
     "Date": "2025-07-03",
-    "Concept A": "건축",
-    "Concept B": "문법",
-    "Hint/Description": "문장의 구조와 건축의 구조는 어떻게 유사한가?"
+    "Concept A": "DNA",
+    "Concept B": "자유",
+    "Hint/Description": "DNA는 유전적 제약을 주지만, 그 안에서도 무수한 변이와 가능성이 존재한다."
   },
   {
     "Date": "2025-07-04",
-    "Concept A": "수채화",
-    "Concept B": "날씨 변화",
-    "Hint/Description": "물의 번짐과 날씨의 흐름은 감정 표현과 어떤 연관이 있을까?"
+    "Concept A": "연필",
+    "Concept B": "가치관",
+    "Hint/Description": "연필은 깎을수록 날카로워지지만 짧아진다. 가치관을 다듬는 과정에서 잃는 것과 얻는 것은?"
   },
   {
     "Date": "2025-07-05",
-    "Concept A": "블록체인",
-    "Concept B": "신뢰",
-    "Hint/Description": "기술이 신뢰를 어떻게 설계할 수 있을까?"
+    "Concept A": "해시계",
+    "Concept B": "희망",
+    "Hint/Description": "해시계는 태양이 있어야 시간을 알 수 있다. 희망도 어떤 '빛'이 필요할까?"
   },
   {
     "Date": "2025-07-06",
-    "Concept A": "춤",
-    "Concept B": "수학 공식",
-    "Hint/Description": "반복과 대칭, 패턴을 통해 리듬과 수학은 어떻게 만날까?"
+    "Concept A": "지도",
+    "Concept B": "일상",
+    "Hint/Description": "지도는 실제 지형을 단순화한 표현이다. 일상의 루틴도 복잡한 삶을 단순화한 지도일까?"
   },
   {
     "Date": "2025-07-07",
-    "Concept A": "빅데이터",
-    "Concept B": "고전 문학",
-    "Hint/Description": "셰익스피어 작품을 데이터 분석하면 어떤 통찰이 나올까?"
+    "Concept A": "사막",
+    "Concept B": "유전자",
+    "Hint/Description": "사막의 겉보기 단조로움 속에는 다양한 생명체가 숨어있다. 유전자도 마찬가지?"
   },
   {
     "Date": "2025-07-08",
-    "Concept A": "화산 폭발",
-    "Concept B": "감정 폭발",
-    "Hint/Description": "내면 감정이 터지는 순간과 자연재해의 유사점은?"
+    "Concept A": "에코시스템",
+    "Concept B": "진로 탐색",
+    "Hint/Description": "생태계에서 한 종의 변화가 전체에 영향을 미치듯, 진로 선택도 삶의 모든 영역에 파급효과가 있다."
   },
   {
     "Date": "2025-07-09",
-    "Concept A": "시계 톱니바퀴",
-    "Concept B": "합창단",
-    "Hint/Description": "각각의 톱니바퀴와 합창단 개개인은 전체를 어떻게 조화롭게 만드는가?"
+    "Concept A": "연극",
+    "Concept B": "심리적 안정",
+    "Hint/Description": "연극에서 배우는 역할 속에서 진정한 자신을 찾기도 한다. 일상의 '역할들'과 진짜 나의 관계는?"
   },
   {
     "Date": "2025-07-10",
-    "Concept A": "코딩",
-    "Concept B": "요리법",
-    "Hint/Description": "알고리즘과 레시피는 어떻게 순서와 로직을 공유하는가?"
+    "Concept A": "풍차",
+    "Concept B": "표현력",
+    "Hint/Description": "풍차는 바람의 힘을 받아 에너지로 변환한다. 표현력도 내면의 감정을 외부로 변환하는 과정이다."
   },
   {
     "Date": "2025-07-11",
-    "Concept A": "바둑",
-    "Concept B": "생태계",
-    "Hint/Description": "바둑의 수 싸움과 생태계 내 종 간 경쟁은 어떻게 닮았을까?"
+    "Concept A": "음표",
+    "Concept B": "기억 왜곡",
+    "Hint/Description": "음표는 정확한 높이와 길이를 가지지만, 연주할 때마다 미묘하게 달라진다. 기억도 마찬가지?"
   },
   {
     "Date": "2025-07-12",
-    "Concept A": "우주 탐사",
-    "Concept B": "명상",
-    "Hint/Description": "우주 공간의 고요함과 명상의 내면적 고요함 사이에 공통점이 있을까?"
+    "Concept A": "태풍",
+    "Concept B": "균형 잡기",
+    "Hint/Description": "태풍의 눈은 가장 조용한 곳이다. 혼란 속에서 중심을 유지하는 비결은?"
   },
   {
     "Date": "2025-07-13",
-    "Concept A": "건축",
-    "Concept B": "문법",
-    "Hint/Description": "문장의 구조와 건축의 구조는 어떻게 유사한가?"
+    "Concept A": "거울",
+    "Concept B": "긴장감",
+    "Hint/Description": "거울은 있는 그대로를 보여준다. 긴장감도 현실을 왜곡 없이 직면할 때 해소될까?"
   },
   {
     "Date": "2025-07-14",
-    "Concept A": "수채화",
-    "Concept B": "날씨 변화",
-    "Hint/Description": "물의 번짐과 날씨의 흐름은 감정 표현과 어떤 연관이 있을까?"
+    "Concept A": "요리법",
+    "Concept B": "회복탄력성",
+    "Hint/Description": "요리법을 따라해도 매번 맛이 다르다. 실패에서 배우고 조정하는 과정이 중요하다."
   },
   {
     "Date": "2025-07-15",
-    "Concept A": "블록체인",
-    "Concept B": "신뢰",
-    "Hint/Description": "기술이 신뢰를 어떻게 설계할 수 있을까?"
+    "Concept A": "망원경",
+    "Concept B": "방향 상실",
+    "Hint/Description": "망원경은 멀리 보기 위해 시야를 좁힌다. 방향을 찾기 위해서는 때로 집중이 필요하다."
   },
   {
     "Date": "2025-07-16",
-    "Concept A": "춤",
-    "Concept B": "수학 공식",
-    "Hint/Description": "반복과 대칭, 패턴을 통해 리듬과 수학은 어떻게 만날까?"
+    "Concept A": "사진기",
+    "Concept B": "집단 사고",
+    "Hint/Description": "사진기는 한 순간을 고정시킨다. 집단 사고도 다양한 관점을 하나의 프레임에 가둘 위험이 있다."
   },
   {
     "Date": "2025-07-17",
-    "Concept A": "빅데이터",
-    "Concept B": "고전 문학",
-    "Hint/Description": "셰익스피어 작품을 데이터 분석하면 어떤 통찰이 나올까?"
+    "Concept A": "천칭",
+    "Concept B": "숨겨진 감정",
+    "Hint/Description": "천칭은 보이지 않는 무게도 정확히 측정한다. 숨겨진 감정도 우리 행동에 영향을 미친다."
   },
   {
     "Date": "2025-07-18",
-    "Concept A": "화산 폭발",
-    "Concept B": "감정 폭발",
-    "Hint/Description": "내면 감정이 터지는 순간과 자연재해의 유사점은?"
+    "Concept A": "사막의 오아시스",
+    "Concept B": "창의성",
+    "Hint/Description": "오아시스는 예상치 못한 곳에서 발견된다. 창의성도 제약과 한계 속에서 피어나는 경우가 많다."
   },
   {
     "Date": "2025-07-19",
-    "Concept A": "시계 톱니바퀴",
-    "Concept B": "합창단",
-    "Hint/Description": "각각의 톱니바퀴와 합창단 개개인은 전체를 어떻게 조화롭게 만드는가?"
+    "Concept A": "모래시계",
+    "Concept B": "습관",
+    "Hint/Description": "모래시계를 뒤집으면 다시 시작된다. 습관도 의식적으로 '뒤집는' 순간이 필요할까?"
   },
   {
     "Date": "2025-07-20",
-    "Concept A": "코딩",
-    "Concept B": "요리법",
-    "Hint/Description": "알고리즘과 레시피는 어떻게 순서와 로직을 공유하는가?"
+    "Concept A": "카메라 렌즈",
+    "Concept B": "기억",
+    "Hint/Description": "렌즈는 초점에 따라 선명한 부분과 흐린 부분이 생긴다. 기억도 어떤 부분에 초점을 맞추느냐에 따라 달라진다."
+  },
+  {
+    "Date": "2025-07-21",
+    "Concept A": "온도계",
+    "Concept B": "기업 문화",
+    "Hint/Description": "온도계는 환경의 변화를 민감하게 감지한다. 기업 문화의 변화도 작은 신호부터 알아차릴 수 있을까?"
+  },
+  {
+    "Date": "2025-07-22",
+    "Concept A": "시계추",
+    "Concept B": "초점",
+    "Hint/Description": "시계추는 규칙적인 움직임으로 시간을 만든다. 초점도 일정한 리듬과 반복이 필요하다."
+  },
+  {
+    "Date": "2025-07-23",
+    "Concept A": "등대",
+    "Concept B": "음악 감상",
+    "Hint/Description": "등대는 어둠 속에서 방향을 제시한다. 음악도 감정의 혼란 속에서 위로와 방향을 줄 수 있다."
+  },
+  {
+    "Date": "2025-07-24",
+    "Concept A": "심해",
+    "Concept B": "관계",
+    "Hint/Description": "심해는 압력이 클수록 독특한 생명체가 산다. 깊은 관계도 어려움을 견딜 때 진가가 드러난다."
+  },
+  {
+    "Date": "2025-07-25",
+    "Concept A": "심장 박동",
+    "Concept B": "호기심",
+    "Hint/Description": "심장은 멈추지 않고 뛴다. 호기심도 지속적인 자극과 새로움을 추구하는 생명력이다."
+  },
+  {
+    "Date": "2025-07-26",
+    "Concept A": "바이러스",
+    "Concept B": "유행",
+    "Hint/Description": "바이러스는 숙주를 통해 확산된다. 유행도 사람들 사이의 연결을 통해 퍼져나간다."
+  },
+  {
+    "Date": "2025-07-27",
+    "Concept A": "퍼즐",
+    "Concept B": "자아",
+    "Hint/Description": "퍼즐은 조각들이 모여 완전한 그림을 만든다. 자아도 다양한 경험과 역할들의 조합이다."
+  },
+  {
+    "Date": "2025-07-28",
+    "Concept A": "불꽃놀이",
+    "Concept B": "아이디어",
+    "Hint/Description": "불꽃놀이는 순간적으로 화려하게 피어났다 사라진다. 아이디어도 포착하지 못하면 금세 잊혀진다."
+  },
+  {
+    "Date": "2025-07-29",
+    "Concept A": "해파리",
+    "Concept B": "네트워크",
+    "Hint/Description": "해파리는 중앙집중식 신경계가 없어도 전체가 조화롭게 움직인다. 분산형 네트워크와 닮았다."
+  },
+  {
+    "Date": "2025-07-30",
+    "Concept A": "요가",
+    "Concept B": "과학 실험",
+    "Hint/Description": "요가는 몸과 마음의 반응을 관찰하는 실험이다. 과학 실험도 가설을 세우고 결과를 관찰한다."
+  },
+  {
+    "Date": "2025-07-31",
+    "Concept A": "롤러코스터",
+    "Concept B": "진로 탐색",
+    "Hint/Description": "롤러코스터는 예측 불가능한 급상승과 급하강이 있다. 진로 탐색의 기복과 닮았다."
   }
 ]
