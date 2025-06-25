@@ -1,5 +1,6 @@
 import { initializeApp } from 'firebase/app';
 import { getFirestore, collection, getDocs, orderBy, limit, query, startAfter, Timestamp } from 'firebase/firestore';
+import { Timestamp } from 'firebase/firestore';
 
 const firebaseConfig = {
   apiKey: process.env.FIREBASE_API_KEY,
@@ -26,10 +27,11 @@ export default async function handler(req, res) {
     );
 
     if (after) {
+      const afterTime = Timestamp.fromDate(new Date(after));
       q = query(
         collection(db, 'answers'),
         orderBy('timestamp', 'desc'),
-        startAfter(after),
+        startAfter(afterTime),
         limit(perPage)
       );
     }
