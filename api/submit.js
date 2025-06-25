@@ -1,5 +1,8 @@
 import { initializeApp } from 'firebase/app';
 import { getFirestore, collection, addDoc } from 'firebase/firestore';
+import { Timestamp } from 'firebase/firestore';
+
+
 
 const firebaseConfig = {
   apiKey: process.env.FIREBASE_API_KEY,
@@ -36,4 +39,11 @@ export default async function handler(req, res) {
     console.error('Error saving answer:', err);
     res.status(500).json({ error: 'Internal server error' });
   }
+  await addDoc(collection(db, 'answers'), {
+    text,
+    wordPair,
+    timestamp: Timestamp.now()
+  });
+
+
 }
